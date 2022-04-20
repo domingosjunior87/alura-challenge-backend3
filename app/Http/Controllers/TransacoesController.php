@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UploadFileTransacaoRequest;
+use Illuminate\Http\UploadedFile;
 
 class TransacoesController extends Controller
 {
@@ -11,10 +12,10 @@ class TransacoesController extends Controller
         return view('transacoes.importar');
     }
 
-    public function store(Request $request)
+    public function store(UploadFileTransacaoRequest $request)
     {
-        /** @var \Illuminate\Http\UploadedFile $arquivo */
+        /** @var UploadedFile $arquivo */
         $arquivo = $request->file('arquivo');
-        dd($arquivo->getClientOriginalName(), $arquivo->getSize());
+        dd($arquivo);
     }
 }

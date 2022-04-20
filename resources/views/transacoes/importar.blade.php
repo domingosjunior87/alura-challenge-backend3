@@ -3,6 +3,9 @@
     <form method="post" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
+            @error('arquivo')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <input class="form-control" type="file" name="arquivo" id="formFile" aria-describedby="fileHelp">
             <div id="fileHelp" class="form-text">Selecione o arquivo para realizar o upload</div>
         </div>
