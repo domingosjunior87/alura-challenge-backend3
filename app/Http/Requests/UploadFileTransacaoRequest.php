@@ -8,7 +8,6 @@ use Illuminate\Validation\Validator;
 
 class UploadFileTransacaoRequest extends FormRequest
 {
-    /** @var bool */
     protected $stopOnFirstFailure = true;
 
     public function authorize(): bool
