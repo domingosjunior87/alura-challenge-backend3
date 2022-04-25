@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/importar', [TransacoesController::class, 'importar']);
+Route::get('/importar', [TransacoesController::class, 'importar'])->name('importar');
 Route::post('/importar', [TransacoesController::class, 'store']);

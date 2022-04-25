@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Transacao;
+use App\Entities\Transacao as TransacaoEntity;
 use App\Entities\TransacaoBuilder;
+use App\Exceptions\ImportacaoRelizadaNaDataException;
 use App\Http\Requests\UploadFileTransacaoRequest;
+use App\Models\Transacao;
 use App\Parsers\CsvParser;
 use Illuminate\Http\UploadedFile;
 
@@ -20,10 +22,16 @@ class TransacoesController extends Controller
         /** @var UploadedFile $arquivo */
         $arquivo = $request->file('arquivo');
 
+        if ($arquivo->getSize() === 0) {
+            return redirect()
+                ->route('importar')
+                ->withError('Arquivo vazio');
+        }
+
         $csvParser = new CsvParser();
         $dados = $csvParser->parser($arquivo->getRealPath());
 
-        /** @var Transacao[] $transacoes */
+        /** @var TransacaoEntity[] $transacoes */
         $transacoes = [];
 
         foreach ($dados as $dado) {
@@ -36,6 +44,18 @@ class TransacoesController extends Controller
                 ->constroi();
         }
 
-        dd($dados, $transacoes);
+        $transacao = new Transacao();
+
+        try {
+            $transacao->importar($transacoes);
+        } catch (ImportacaoRelizadaNaDataException $e) {
+            return redirect()
+                ->route('importar')
+                ->withError($e->getMessage());
+        }
+
+        return redirect()
+            ->route('importar')
+            ->withSuccess('Importação efetuada!');
     }
 }
